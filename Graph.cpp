@@ -13,7 +13,7 @@ Graph::Graph(int numVertices) {
 }
 
 void Graph::insertEdge(Edge e) {
-    if(matrix_[e.v1][e.v2] == 0) {
+    if((matrix_[e.v1][e.v2] == 0) && (e.v1 != e.v2)) {
         matrix_[e.v1][e.v2] = 1;
         matrix_[e.v2][e.v1] = 1;
         numEdges_++;
@@ -36,4 +36,12 @@ void Graph::print() {
         }
         cout << "\n";
     }
+}
+
+int Graph::numEdges() {
+    return numEdges_;
+}
+
+int Graph::numVertices() {
+    return numVertices_;
 }
