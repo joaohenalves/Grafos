@@ -6,6 +6,7 @@ using namespace std;
 Graph::Graph(int numVertices) {
     numVertices_ = numVertices;
     numEdges_ = 0;
+    visited_.resize(numVertices);
     matrix_.resize(numVertices);
     for(int i = 0; i < numVertices; i++) {
         matrix_[i].resize(numVertices, 0);
@@ -36,6 +37,38 @@ void Graph::print() {
         }
         cout << "\n";
     }
+}
+
+void Graph::dfs(int v) {
+    visited_[v] = 1;
+    for(int i = 0; i < numVertices_; i++) {
+        if(matrix_[v][i] == 1 && !visited_[i]) dfs(i);
+    }
+}
+
+int Graph::isConnected() {
+    int counter = 0;
+    for(int i = 0; i < numVertices_; i++) {
+        if(!visited_[i]) {
+            dfs(i);
+            counter++;
+        }
+    }
+    fill(visited_.begin(), visited_.end(), 0);
+    return counter;
+}
+
+bool Graph::checkCycle(int v, int u) {
+    visited_[u] = 1;
+    for(int i = 0; i < numVertices_; i++) {
+        if(visited_[i] == 1) {
+            if(i != v) return true;
+            else {
+                return checkCycle(u, i);
+            }
+        }
+    }
+    return false;
 }
 
 int Graph::numEdges() {
