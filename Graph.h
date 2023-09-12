@@ -14,7 +14,8 @@ public:
     void removeEdge(Edge e);
     void dfs(int v);
     int isConnected();
-    bool checkCycle(int v, int u);
+    bool dfsCycle(int u, int v);
+    bool checkCycle();
     void print();
 private:
     int numVertices_;

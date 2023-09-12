@@ -1,6 +1,6 @@
 #include "Graph.h"
 #include "Edge.h"
-#include <iostream>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -18,7 +18,7 @@ int main() {
             if(op == 'X') {
                 cout << (graph.isConnected() == 1 ? "SIM\n" : "NAO\n");
             } else {
-                cout << (graph.checkCycle(0, 0) ? "NAO\n" : "SIM\n");
+                cout << (graph.checkCycle() ? "NAO\n" : "SIM\n");
             }
         }
     }

@@ -58,15 +58,28 @@ int Graph::isConnected() {
     return counter;
 }
 
-//currently generating seg fault, must fix this
-bool Graph::checkCycle(int v, int u) {
-    visited_[u] = 1;
+bool Graph::dfsCycle(int u, int v) {
+    visited_[v] = 1;
+    bool ans = false;
     for(int i = 0; i < numVertices_; i++) {
-        if(visited_[i] == 1) {
-            if(i != v) return true;
-            else {
-                return checkCycle(u, i);
+        if(matrix_[v][i] == 1) {
+            if(!visited_[i]) {
+                ans |= dfsCycle(v, i);
+            } else {
+                if(i != u) return true;
             }
+        }
+    }
+    return ans;
+} 
+
+//currently generating seg fault, must fix this
+bool Graph::checkCycle() {
+    bool ans = false;
+    for(int i = 0; i < numVertices_; i++) {
+        if(!visited_[i]) {
+            ans = dfsCycle(i, i);
+            if(ans) return true;
         }
     }
     return false;
