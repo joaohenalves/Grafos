@@ -49,10 +49,10 @@ void Graph::dfs(int v) {
 int Graph::isConnected() {
     int counter = 0;
     for(int i = 0; i < numVertices_; i++) {
-        if(!visited_[i]) {
+        if(!visited_[i] && counter <= 1) {
             dfs(i);
             counter++;
-        }
+        } else if(counter > 1) return counter;
     }
     fill(visited_.begin(), visited_.end(), 0);
     return counter;
