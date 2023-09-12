@@ -58,6 +58,7 @@ int Graph::isConnected() {
     return counter;
 }
 
+//currently generating seg fault, must fix this
 bool Graph::checkCycle(int v, int u) {
     visited_[u] = 1;
     for(int i = 0; i < numVertices_; i++) {
