@@ -47,39 +47,38 @@ void Graph::dfs(int v) {
 }
 
 int Graph::isConnected() {
-    int counter = 0;
-    for(int i = 0; i < numVertices_; i++) {
+    int i, counter = 0;
+    for(i = 0; i < numVertices_; i++) {
         if(!visited_[i] && counter <= 1) {
             dfs(i);
             counter++;
         } else if(counter > 1) return counter;
     }
-    fill(visited_.begin(), visited_.end(), 0);
+    for(i = 0; i < numVertices_; i++) visited_[i] = 0;
     return counter;
 }
 
 bool Graph::dfsCycle(int u, int v) {
     visited_[v] = 1;
-    bool ans = false;
     for(int i = 0; i < numVertices_; i++) {
         if(matrix_[v][i] == 1) {
             if(!visited_[i]) {
-                ans |= dfsCycle(v, i);
+                if(dfsCycle(v, i)) return true;
             } else {
-                if(i != u) return true;
+                if(i != u) {
+                    return true;
+                }
             }
         }
     }
-    return ans;
-} 
+    return false;
+}
 
-//currently generating seg fault, must fix this
 bool Graph::checkCycle() {
-    bool ans = false;
+    fill(visited_.begin(), visited_.end(), 0);
     for(int i = 0; i < numVertices_; i++) {
         if(!visited_[i]) {
-            ans = dfsCycle(i, i);
-            if(ans) return true;
+            if(dfsCycle(-1, i)) return true;
         }
     }
     return false;
