@@ -16,7 +16,7 @@ int main() {
         }
         while(cin >> op) {
             if(op == 'X') {
-                cout << (graph.isConnected() == 1 ? "SIM\n" : "NAO\n");
+                cout << (graph.countComp() == 1 ? "SIM\n" : "NAO\n");
             } else {
                 cout << (graph.checkCycle() ? "NAO\n" : "SIM\n");
             }

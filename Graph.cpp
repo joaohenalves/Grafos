@@ -1,5 +1,6 @@
 #include "Graph.h"
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
@@ -7,24 +8,23 @@ Graph::Graph(int numVertices) {
     numVertices_ = numVertices;
     numEdges_ = 0;
     visited_.resize(numVertices);
-    matrix_.resize(numVertices);
-    for(int i = 0; i < numVertices; i++) {
-        matrix_[i].resize(numVertices, 0);
-    }
+    adjList_.resize(numVertices);
 }
 
 void Graph::insertEdge(Edge e) {
-    if((matrix_[e.v1][e.v2] == 0) && (e.v1 != e.v2)) {
-        matrix_[e.v1][e.v2] = 1;
-        matrix_[e.v2][e.v1] = 1;
+    if(e.v1 == e.v2) return;
+    if(find(adjList_[e.v1].begin(), adjList_[e.v1].end(), e.v2) == adjList_[e.v1].end()) {
+        adjList_[e.v1].push_front(e.v2);
+        adjList_[e.v2].push_front(e.v1);
         numEdges_++;
     }
 }
 
 void Graph::removeEdge(Edge e) {
-    if(matrix_[e.v1][e.v2] == 1) {
-        matrix_[e.v1][e.v2] = 0;
-        matrix_[e.v2][e.v1] = 0;
+    auto it = find(adjList_[e.v1].begin(), adjList_[e.v1].end(), e.v2);
+    if(it != adjList_[e.v1].end()) {
+        adjList_[e.v1].erase(it);
+        adjList_[e.v2].erase(find(adjList_[e.v2].begin(), adjList_[e.v2].end(), e.v1));
         numEdges_--;
     }
 }
@@ -32,8 +32,8 @@ void Graph::removeEdge(Edge e) {
 void Graph::print() {
     for(int i = 0; i < numVertices_; i++) {
         cout << i << ":";
-        for(int j = 0; j < numVertices_; j++) {
-            if(matrix_[i][j] == 1) cout << " " << j; 
+        for(auto e : adjList_[i]) {
+            cout << " " << e; 
         }
         cout << "\n";
     }
@@ -41,34 +41,30 @@ void Graph::print() {
 
 void Graph::dfs(int v) {
     visited_[v] = 1;
-    for(int i = 0; i < numVertices_; i++) {
-        if(matrix_[v][i] == 1 && !visited_[i]) dfs(i);
+    for(auto e : adjList_[v]) {
+        if(!visited_[e]) dfs(e);
     }
 }
 
-int Graph::isConnected() {
+int Graph::countComp() {
+    fill(visited_.begin(), visited_.end(), 0);
     int i, counter = 0;
     for(i = 0; i < numVertices_; i++) {
-        if(!visited_[i] && counter <= 1) {
+        if(!visited_[i]) {
             dfs(i);
             counter++;
-        } else if(counter > 1) return counter;
+        }
     }
-    for(i = 0; i < numVertices_; i++) visited_[i] = 0;
     return counter;
 }
 
 bool Graph::dfsCycle(int u, int v) {
     visited_[v] = 1;
-    for(int i = 0; i < numVertices_; i++) {
-        if(matrix_[v][i] == 1) {
-            if(!visited_[i]) {
-                if(dfsCycle(v, i)) return true;
-            } else {
-                if(i != u) {
-                    return true;
-                }
-            }
+    for(auto e : adjList_[v]) {
+        if(!visited_[e]) {
+            if(dfsCycle(v, e)) return true;
+        } else {
+            if(e != u) return true;
         }
     }
     return false;
