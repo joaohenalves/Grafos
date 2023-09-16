@@ -16,9 +16,9 @@ int main() {
         }
         while(cin >> op) {
             if(op == 'X') {
-                cout << (graph.countComp() == 1 ? "SIM\n" : "NAO\n");
+                cout << graph.countComp() << " Connected components\n";
             } else {
-                cout << (graph.checkCycle() ? "NAO\n" : "SIM\n");
+                cout << (graph.checkCycle() ? "This graph contains a cycle\n" : "This graph does not contain a cycle\n");
             }
         }
     }
