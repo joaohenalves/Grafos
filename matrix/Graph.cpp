@@ -15,8 +15,7 @@ Graph::Graph(int numVertices) {
 
 void Graph::insertEdge(Edge e) {
     if((matrix_[e.v1][e.v2] == 0) && (e.v1 != e.v2)) {
-        matrix_[e.v1][e.v2] = 1;
-        matrix_[e.v2][e.v1] = 1;
+        matrix_[e.v1][e.v2] = matrix_[e.v2][e.v1] = 1;
         numEdges_++;
     }
 }
@@ -47,14 +46,15 @@ void Graph::dfs(int v) {
 }
 
 int Graph::isConnected() {
+    fill(visited_.begin(), visited_.end(), 0);
     int i, counter = 0;
     for(i = 0; i < numVertices_; i++) {
-        if(!visited_[i] && counter <= 1) {
-            dfs(i);
+        if(!visited_[i]) {
             counter++;
-        } else if(counter > 1) return counter;
+            if(counter > 1) return counter;
+            dfs(i);
+        }
     }
-    for(i = 0; i < numVertices_; i++) visited_[i] = 0;
     return counter;
 }
 
@@ -65,9 +65,7 @@ bool Graph::dfsCycle(int u, int v) {
             if(!visited_[i]) {
                 if(dfsCycle(v, i)) return true;
             } else {
-                if(i != u) {
-                    return true;
-                }
+                if(i != u) return true;
             }
         }
     }
