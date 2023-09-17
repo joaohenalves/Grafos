@@ -1,6 +1,7 @@
 #include "Graph.h"
 #include <iostream>
 #include <algorithm>
+#include <queue>
 
 using namespace std;
 
@@ -9,6 +10,7 @@ Graph::Graph(int numVertices) {
     numEdges_ = 0;
     visited_.resize(numVertices);
     adjList_.resize(numVertices);
+    distances_.resize(numVertices);
 }
 
 void Graph::insertEdge(Edge e) {
@@ -78,6 +80,26 @@ bool Graph::checkCycle() {
         }
     }
     return false;
+}
+
+void Graph::bfs(int src) {
+    fill(visited_.begin(), visited_.end(), 0);
+    fill(distances_.begin(), distances_.end(), 0);
+    queue<int> q;
+    int temp;
+    distances_[src] = 0;
+    q.push(src);
+    while(!q.empty()) {
+        temp = q.front();
+        q.pop();
+        for(auto e : adjList_[temp]) {
+            if(!visited_[e]) {
+                q.push(e);
+                distances_[e] = distances_[temp] + 1;
+                visited_[e] = 1;
+            }
+        }
+    }
 }
 
 int Graph::numEdges() {
