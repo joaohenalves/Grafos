@@ -88,6 +88,7 @@ void Graph::bfs(int src) {
     queue<int> q;
     int temp;
     distances_[src] = 0;
+    visited_[src] = 1;
     q.push(src);
     while(!q.empty()) {
         temp = q.front();
